@@ -3,7 +3,6 @@ const path = require("path");
 
 const newSortPeople = (toSortDir, maleDir, femaleDir) => {
     fs.readdir(toSortDir, (e, files) => {
-
         if (e) {
             console.log(e);
             return;
@@ -11,7 +10,6 @@ const newSortPeople = (toSortDir, maleDir, femaleDir) => {
 
         files.forEach(file => {
             fs.readFile(path.join(toSortDir, file), (err, data) => {
-
                 if (e) {
                     console.log(err);
                     return;
@@ -27,7 +25,7 @@ const newSortPeople = (toSortDir, maleDir, femaleDir) => {
                         console.log(err);
                     });
             });
-        })
+        });
     });
 };
 
