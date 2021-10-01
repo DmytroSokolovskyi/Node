@@ -9,7 +9,3 @@ const femalePeoplesPath = path.join(__dirname, 'peoples', 'female');
 // console.log(sort.sortPeople(allPeoplesPath));
 console.log(newSort.newSortPeople(malePeoplesPath, malePeoplesPath, femalePeoplesPath));
 console.log(newSort.newSortPeople(femalePeoplesPath, malePeoplesPath, femalePeoplesPath));
-
-
-
-
