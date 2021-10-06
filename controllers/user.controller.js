@@ -1,22 +1,47 @@
-const {readDb, userById, deleteById, createNewUser, updateUser} = require("../helpers/users.helpers");
+const path = require('path');
+
+const {readDb, writeToDb} = require('../helpers/users.helpers');
+
+const db = path.join(__dirname, '../', 'dataBase', 'users.json');
 
 module.exports = {
-    getUsers: (req, res) => {
-        readDb().then(data => res.json(JSON.parse(data)));
+    getUsers: async (req, res) => {
+        const users = await readDb(db);
+
+        res.json(JSON.parse(users));
     },
-    getUserById: (req, res) => {
+
+    getUserById: async (req, res) => {
         const {user_id} = req.params;
-        userById(user_id).then(value => res.json(value));
+        const users = await readDb(db);
+
+        res.json(JSON.parse(users).find(item => item.id === +user_id));
     },
-    deleteUserById: (req, res) => {
+
+    deleteUserById: async (req, res) => {
         const {user_id} = req.params;
-        deleteById(user_id).then(value => res.json(value));
+        const users = await readDb(db);
+        const newUsers = JSON.parse(users).filter(item => item.id !== +user_id);
+        await writeToDb(db, newUsers);
+
+        res.json(newUsers);
     },
-    createUser: (req, res) => {
-        createNewUser(req.body).then(value => res.json(JSON.parse(value)));
+
+    createUser: async (req, res) => {
+        const users =  JSON.parse(await readDb(db));
+        users.push({...req.body, id: users[users.length - 1].id + 1});
+        await writeToDb(db, users);
+
+        res.json(users);
     },
-    updateUserById: (req, res) => {
+
+
+    updateUserById: async (req, res) => {
         const {user_id} = req.params;
-        updateUser(user_id, req.body).then(value => res.json(JSON.parse(value)));
+        const users =  JSON.parse(await readDb(db));
+        const newUsers = users.map(item => item.id === +user_id ? Object.assign(item, req.body) : item);
+        await writeToDb(db, newUsers);
+
+        res.json(newUsers);
     },
 };
