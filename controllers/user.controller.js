@@ -1,47 +1,56 @@
-const path = require('path');
-
-const {readDb, writeToDb} = require('../helpers/users.helpers');
-
-const db = path.join(__dirname, '../', 'dataBase', 'users.json');
+const User = require('../dataBase/User');
 
 module.exports = {
     getUsers: async (req, res) => {
-        const users = await readDb(db);
+        try {
+            const users = await User.find();
 
-        res.json(JSON.parse(users));
+            res.json(users);
+        } catch (e) {
+            res.json(e.message);
+        }
     },
 
     getUserById: async (req, res) => {
-        const {user_id} = req.params;
-        const users = await readDb(db);
+        try {
+            const {user_id} = req.params;
+            const user = await User.findById(user_id);
 
-        res.json(JSON.parse(users).find(item => item.id === +user_id));
+            res.json({user});
+        } catch (e) {
+            res.json(e.message);
+        }
     },
 
     deleteUserById: async (req, res) => {
-        const {user_id} = req.params;
-        const users = await readDb(db);
-        const newUsers = JSON.parse(users).filter(item => item.id !== +user_id);
-        await writeToDb(db, newUsers);
+        try {
+            const {user_id} = req.params;
+            const delUser = await User.findByIdAndDelete(user_id);
 
-        res.json(newUsers);
+            res.json(delUser);
+        } catch (e) {
+            res.json(e.message);
+        }
     },
 
     createUser: async (req, res) => {
-        const users =  JSON.parse(await readDb(db));
-        users.push({...req.body, id: users[users.length - 1].id + 1});
-        await writeToDb(db, users);
+        try {
+            const user = await User.create(req.body);
 
-        res.json(users);
+            res.json(user);
+        } catch (e) {
+            res.json(e.message);
+        }
     },
 
-
     updateUserById: async (req, res) => {
-        const {user_id} = req.params;
-        const users =  JSON.parse(await readDb(db));
-        const newUsers = users.map(item => item.id === +user_id ? Object.assign(item, req.body) : item);
-        await writeToDb(db, newUsers);
+        try {
+            const {user_id} = req.params;
+            const user = await User.findByIdAndUpdate(user_id, req.body);
 
-        res.json(newUsers);
+            res.json(user);
+        } catch (e) {
+            res.json(e.message);
+        }
     },
 };
