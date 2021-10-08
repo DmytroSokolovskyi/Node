@@ -26,7 +26,7 @@ module.exports = {
                 pass.forEach(p => p !== p.toLowerCase() ? upper++ : lover++);
 
                 if (upper === 0 || lover === 0) {
-                    throw new Error('The password password in one case');
+                    throw new Error('The password in one case');
                 }
 
             };
