@@ -10,26 +10,25 @@ module.exports = {
                 throw new Error('Wrong Email or password');
             }
 
+            req.user = user;
+
             next();
-        }catch (e) {
+        } catch (e) {
             res.json(e.message);
         }
-
     },
 
-    checkAuth: async (req, res, next) => {
+    checkAuth: (req, res, next) => {
         try {
-            const {email, password} = req.body;
-            const user = await User.findOne({email, password});
+            const {auth} = req.user;
 
-            if (user.auth) {
+            if (auth) {
                 throw new Error('You are already logged in');
             }
 
             next();
-        }catch (e) {
+        } catch (e) {
             res.json(e.message);
         }
-
     }
 };

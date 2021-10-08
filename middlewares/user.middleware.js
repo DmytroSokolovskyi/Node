@@ -25,7 +25,7 @@ module.exports = {
                 let lover = 0;
                 pass.forEach(p => p !== p.toLowerCase() ? upper++ : lover++);
 
-                if (upper === 0 || lover === 0) {
+                if (!upper || !lover) {
                     throw new Error('The password in one case');
                 }
 
@@ -40,6 +40,15 @@ module.exports = {
         } catch (e) {
             res.json(e.message);
         }
-    }
+    },
 
+    checkUserIdMiddleware: async (req, res, next) => {
+        try {
+            await User.findOne({_id: req.params.user_id});
+
+            next();
+        } catch (e) {
+            res.json('Id does not exist');
+        }
+    }
 };

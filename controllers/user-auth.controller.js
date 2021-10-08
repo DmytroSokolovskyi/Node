@@ -8,7 +8,7 @@ module.exports = {
 
             res.json(user);
         } catch (e) {
-            res(e);
+            res.json(e.message);
         }
     }
 };
