@@ -23,28 +23,18 @@ module.exports = {
             const checkCase = (pass) => {
                 let upper = 0;
                 let lover = 0;
-                for (const one of pass) {
-                    if (one !== one.toLowerCase(one)) {
-                        upper = upper + 1;
-                    } else {
-                        lover = lover + 1;
-                    }
-
-                }
+                pass.forEach(p => p !== p.toLowerCase() ? upper++ : lover++);
 
                 if (upper === 0 || lover === 0) {
-                    return true;
+                    throw new Error('The password password in one case');
                 }
+
             };
+            checkCase(toCheck);
 
-            if (checkCase(toCheck)) {
-                throw new Error('The password password in one case');
-            }
-
-            if (password < 10 || password > 30) {
+            if (password.length < 10 || password.length > 30) {
                 throw new Error('The password cannot be beat that long');
             }
-
 
             next();
         } catch (e) {
