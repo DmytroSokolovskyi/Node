@@ -1,14 +1,16 @@
 const User = require('../dataBase/User');
+const {userValidator} = require('../validators');
 
 module.exports = {
-    createUserMiddleware: async (req, res, next) => {
+    createUserBodyValid: (req, res, next) => {
         try {
-            const mail = req.body.email;
-            const userByEmail = await User.findOne({email: mail});
+            const {error, value} = userValidator.createUserValidator.validate(req.body);
 
-            if (userByEmail) {
-                throw new Error('Email already exist');
+            if (error) {
+                throw new Error(error.details[0].message);
             }
+
+            req.user = value;
 
             next();
         } catch (e) {
@@ -16,7 +18,7 @@ module.exports = {
         }
     },
 
-    checkPassword: (req, res, next) => {
+    checkPasswordCase: (req, res, next) => {
         try {
             const {password} = req.body;
             const toCheck = password.split('');
@@ -29,12 +31,22 @@ module.exports = {
                 if (!upper || !lover) {
                     throw new Error('The password in one case');
                 }
-
             };
             checkCase(toCheck);
 
-            if (password.length < 10 || password.length > 30) {
-                throw new Error('The password cannot be beat that long');
+            next();
+        } catch (e) {
+            res.json(e.message);
+        }
+    },
+
+    createUserMiddleware: async (req, res, next) => {
+        try {
+            const mail = req.body.email;
+            const userByEmail = await User.findOne({email: mail}).lean();
+
+            if (userByEmail) {
+                throw new Error('Email already exist');
             }
 
             next();
@@ -46,7 +58,13 @@ module.exports = {
     checkUserIdMiddleware: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findById(user_id);
+            const {error, value} = userValidator.idUserValidator.validate({id: user_id});
+
+            if (error) {
+                throw new Error(error.details[0].message);
+            }
+
+            const user = await User.findById(value.id).lean();
 
             if (!user) {
                 throw new Error('Id does not exist');
@@ -58,5 +76,27 @@ module.exports = {
         } catch (e) {
             res.json(e.message);
         }
-    }
+    },
+
+    updateUserBodyValid: (req, res, next) => {
+        try {
+            const { email, password, auth, role } = req.body;
+
+            if ( email || password || auth ||role ) {
+                throw new Error('You can only change the name');
+            }
+
+            const {error, value} = userValidator.nameEditValidator.validate(req.body);
+
+            if (error) {
+                throw new Error(error.details[0].message);
+            }
+
+            req.user = value;
+
+            next();
+        } catch (e) {
+            res.json(e.message);
+        }
+    },
 };

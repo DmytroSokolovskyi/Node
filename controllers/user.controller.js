@@ -1,11 +1,14 @@
 const User = require('../dataBase/User');
+const {passwordService} = require('../service');
+const {userUtil} = require('../util');
 
 module.exports = {
     getUsers: async (req, res) => {
         try {
-            const users = await User.find();
+            const users = await User.find().lean();
+            const usersNormalize = users.map((user) => userUtil.userNormalizator(user));
 
-            res.json(users);
+            res.json(usersNormalize);
         } catch (e) {
             res.json(e.message);
         }
@@ -13,7 +16,8 @@ module.exports = {
 
     getUserById: (req, res) => {
         try {
-            const user = req.user;
+            let user = req.user;
+            user = userUtil.userNormalizator(user);
 
             res.json({user});
         } catch (e) {
@@ -24,7 +28,8 @@ module.exports = {
     deleteUserById: async (req, res) => {
         try {
             const {user_id} = req.params;
-            const delUser = await User.findByIdAndDelete(user_id);
+            let delUser = await User.findByIdAndDelete(user_id).lean();
+            delUser = userUtil.userNormalizator(delUser);
 
             res.json(delUser);
         } catch (e) {
@@ -34,9 +39,11 @@ module.exports = {
 
     createUser: async (req, res) => {
         try {
-            const user = await User.create(req.body);
+            const {password} = req.user;
+            const hashedPassword = await passwordService.hash(password);
+            await User.create({...req.user, password: hashedPassword});
 
-            res.json(user);
+            res.json("Done");
         } catch (e) {
             res.json(e.message);
         }
@@ -45,7 +52,8 @@ module.exports = {
     updateUserById: async (req, res) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findByIdAndUpdate(user_id, req.body);
+            let user = await User.findByIdAndUpdate(user_id, req.body).lean();
+            user = userUtil.userNormalizator(user);
 
             res.json(user);
         } catch (e) {

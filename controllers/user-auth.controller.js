@@ -1,12 +1,14 @@
 const User = require('../dataBase/User');
+const {userUtil} = require('../util');
 
 module.exports = {
     loginUser: async (req, res) => {
         try {
-            const {email, password} = req.body;
-            const user = await User.findOneAndUpdate({email, password}, {auth: true});
+            const {email} = req.body;
+            let userNew = await User.findOneAndUpdate({email}, {auth: true}).lean();
+            userNew = userUtil.userNormalizator(userNew);
 
-            res.json(user);
+            res.json(userNew);
         } catch (e) {
             res.json(e.message);
         }
