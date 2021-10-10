@@ -11,10 +11,9 @@ module.exports = {
         }
     },
 
-    getUserById: async (req, res) => {
+    getUserById: (req, res) => {
         try {
-            const {user_id} = req.params;
-            const user = await User.findById(user_id);
+            const user = req.user;
 
             res.json({user});
         } catch (e) {
