@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const {constants} = require('../configs');
 
-const authValidator = Joi.object({
+const loginValidator = Joi.object({
     email: Joi
         .string()
         .regex(constants.EMAIL_REGEXP)
@@ -14,9 +14,17 @@ const authValidator = Joi.object({
         .min(8)
         .max(128)
         .trim()
-        .required(),
+        .required()
 });
 
+const logoutValidator = Joi.object({
+    email: Joi
+        .string()
+        .regex(constants.EMAIL_REGEXP)
+        .lowercase()
+        .required()
+});
 module.exports = {
-    authValidator
+    loginValidator,
+    logoutValidator
 };

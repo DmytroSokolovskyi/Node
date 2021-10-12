@@ -7,14 +7,14 @@ module.exports = {
             const {error, value} = userValidator.createUserValidator.validate(req.body);
 
             if (error) {
-                throw new Error(error.details[0].message);
+                return next({message: error.details[0].message, status: 400});
             }
 
             req.user = value;
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -29,14 +29,14 @@ module.exports = {
                 pass.forEach(p => p !== p.toLowerCase() ? upper++ : lover++);
 
                 if (!upper || !lover) {
-                    throw new Error('The password in one case');
+                    return next({message: 'The password in one case', status: 400});
                 }
             };
             checkCase(toCheck);
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -46,12 +46,12 @@ module.exports = {
             const userByEmail = await User.findOne({email: mail}).lean();
 
             if (userByEmail) {
-                throw new Error('Email already exist');
+                return next({message: 'Email already exist', status: 409});
             }
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -61,20 +61,20 @@ module.exports = {
             const {error, value} = userValidator.idUserValidator.validate({id: user_id});
 
             if (error) {
-                throw new Error(error.details[0].message);
+                return next({message: error.details[0].message, status: 400});
             }
 
             const user = await User.findById(value.id).lean();
 
             if (!user) {
-                throw new Error('Id does not exist');
+                return next({message: 'Id does not exist', status: 404});
             }
 
             req.user = user;
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 
@@ -83,20 +83,20 @@ module.exports = {
             const { email, password, auth, role } = req.body;
 
             if ( email || password || auth ||role ) {
-                throw new Error('You can only change the name');
+                return next({message: 'You can only change the name', status: 403});
             }
 
             const {error, value} = userValidator.nameEditValidator.validate(req.body);
 
             if (error) {
-                throw new Error(error.details[0].message);
+                return next({message: error.details[0].message, status: 400});
             }
 
             req.user = value;
 
             next();
         } catch (e) {
-            res.json(e.message);
+            next(e);
         }
     },
 };

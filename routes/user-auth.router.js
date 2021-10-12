@@ -5,11 +5,16 @@ const {userAuthMiddleware} = require('../middlewares');
 
 userAuthRouter.post(
     '/login',
-    userAuthMiddleware.authBodyValid,
+    userAuthMiddleware.loginBodyValid,
     userAuthMiddleware.userAuth,
     userAuthMiddleware.checkAuth,
     userAuthMiddleware.comparePassword,
     userAuthController.loginUser
 );
+userAuthRouter.post(
+    '/logout',
+    userAuthMiddleware.logoutBodyValid,
+    userAuthMiddleware.userAuth,
+    userAuthController.logoutUser);
 
 module.exports = userAuthRouter;
