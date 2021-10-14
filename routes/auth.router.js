@@ -1,9 +1,9 @@
-const userAuthRouter = require('express').Router();
+const authRouter = require('express').Router();
 
 const {userAuthController} = require('../controllers');
 const {userAuthMiddleware} = require('../middlewares');
 
-userAuthRouter.post(
+authRouter.post(
     '/login',
     userAuthMiddleware.loginBodyValid,
     userAuthMiddleware.userAuth,
@@ -11,10 +11,10 @@ userAuthRouter.post(
     userAuthMiddleware.comparePassword,
     userAuthController.loginUser
 );
-userAuthRouter.post(
+authRouter.post(
     '/logout',
     userAuthMiddleware.logoutBodyValid,
     userAuthMiddleware.userAuth,
     userAuthController.logoutUser);
 
-module.exports = userAuthRouter;
+module.exports = authRouter;

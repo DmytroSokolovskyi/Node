@@ -1,11 +1,11 @@
-const User = require('../dataBase/User');
+const Client = require('../dataBase/Clients');
 const {userUtil} = require('../util');
 
 module.exports = {
     loginUser: async (req, res, next) => {
         try {
             const {email} = req.body;
-            let userNew = await User.findOneAndUpdate({email}, {auth: true}).lean();
+            let userNew = await Client.findOneAndUpdate({email}, {auth: true}).lean();
 
             userNew = userUtil.userNormalizator(userNew);
 
@@ -18,7 +18,7 @@ module.exports = {
     logoutUser: async (req, res, next) => {
         try {
             const {email} = req.body;
-            let userNew = await User.findOneAndUpdate({email}, {auth: false}).lean();
+            let userNew = await Client.findOneAndUpdate({email}, {auth: false}).lean();
 
             userNew = userUtil.userNormalizator(userNew);
 

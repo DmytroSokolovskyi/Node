@@ -1,6 +1,8 @@
-const User = require('../dataBase/User');
+const {Clients} = require('../dataBase');
 const {passwordService} = require('../service');
 const {userAuthValidator} = require('../validators');
+const {customErrors} = require('../errors');
+
 
 module.exports = {
     loginBodyValid: (req, res, next) => {
@@ -8,7 +10,7 @@ module.exports = {
             const {error, value} = userAuthValidator.loginValidator.validate(req.body);
 
             if (error) {
-                return next({message: error.details[0].message, status: 400});
+                return next(customErrors.BAD_REQUEST);
             }
 
             req.emailPass = value;
@@ -24,7 +26,7 @@ module.exports = {
             const {error, value} = userAuthValidator.logoutValidator.validate(req.body);
 
             if (error) {
-                return next({message: error.details[0].message, status: 400});
+                return next(customErrors.BAD_REQUEST);
             }
 
             req.emailPass = value;
@@ -38,10 +40,10 @@ module.exports = {
     userAuth: async (req, res, next) => {
         try {
             const {email} = req.emailPass;
-            const user = await User.findOne({email}).select('+password');
+            const user = await Clients.findOne({email}).select('+password');
 
             if (!user) {
-                return next({message: 'Wrong Email or password', status: 404});
+                return next(customErrors.NOT_FOUND);
             }
 
             req.user = user;
@@ -75,7 +77,7 @@ module.exports = {
             const check = await passwordService.compare(password, user.password);
 
             if (!check) {
-                return next({message: 'Wrong Email or password', status: 404});
+                return next(customErrors.NOT_FOUND);
             }
 
             next();

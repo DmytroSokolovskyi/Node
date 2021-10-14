@@ -1,5 +1,6 @@
-const User = require('../dataBase/User');
+const {Clients} = require('../dataBase');
 const {userValidator} = require('../validators');
+const {customErrors} = require('../errors');
 
 module.exports = {
     createUserBodyValid: (req, res, next) => {
@@ -7,7 +8,7 @@ module.exports = {
             const {error, value} = userValidator.createUserValidator.validate(req.body);
 
             if (error) {
-                return next({message: error.details[0].message, status: 400});
+                return next(customErrors.BAD_REQUEST);
             }
 
             req.user = value;
@@ -43,10 +44,10 @@ module.exports = {
     createUserMiddleware: async (req, res, next) => {
         try {
             const mail = req.body.email;
-            const userByEmail = await User.findOne({email: mail}).lean();
+            const userByEmail = await Clients.findOne({email: mail}).lean();
 
             if (userByEmail) {
-                return next({message: 'Email already exist', status: 409});
+                return next(customErrors.CONFLICT);
             }
 
             next();
@@ -61,13 +62,13 @@ module.exports = {
             const {error, value} = userValidator.idUserValidator.validate({id: user_id});
 
             if (error) {
-                return next({message: error.details[0].message, status: 400});
+                return next(customErrors.BAD_REQUEST);
             }
 
-            const user = await User.findById(value.id).lean();
+            const user = await Clients.findById(value.id).lean();
 
             if (!user) {
-                return next({message: 'Id does not exist', status: 404});
+                return next(customErrors.NOT_FOUND);
             }
 
             req.user = user;
@@ -83,13 +84,13 @@ module.exports = {
             const { email, password, auth, role } = req.body;
 
             if ( email || password || auth ||role ) {
-                return next({message: 'You can only change the name', status: 403});
+                return next(customErrors.FORBIDDEN);
             }
 
             const {error, value} = userValidator.nameEditValidator.validate(req.body);
 
             if (error) {
-                return next({message: error.details[0].message, status: 400});
+                return next(customErrors.BAD_REQUEST);
             }
 
             req.user = value;

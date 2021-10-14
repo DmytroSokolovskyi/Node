@@ -1,11 +1,11 @@
-const User = require('../dataBase/User');
+const Client = require('../dataBase/Clients');
 const {passwordService} = require('../service');
 const {userUtil} = require('../util');
 
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await User.find();
+            const users = await Client.find();
 
             res.json(users);
         } catch (e) {
@@ -26,7 +26,7 @@ module.exports = {
     deleteUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const delUser = await User.findByIdAndDelete(user_id);
+            const delUser = await Client.findByIdAndDelete(user_id);
 
             res.json(delUser);
         } catch (e) {
@@ -38,7 +38,7 @@ module.exports = {
         try {
             const {password} = req.user;
             const hashedPassword = await passwordService.hash(password);
-            let newUser =await User.create({...req.user, password: hashedPassword});
+            let newUser =await Client.create({...req.user, password: hashedPassword});
 
             newUser = userUtil.userNormalizator(newUser.toObject());
 
@@ -51,7 +51,7 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findByIdAndUpdate(user_id, req.body);
+            const user = await Client.findByIdAndUpdate(user_id, req.body);
 
             res.json(user);
         } catch (e) {
