@@ -28,7 +28,7 @@ const createUserValidator = Joi.object({
 });
 
 const idUserValidator = Joi.object({
-    id:  Joi
+    id: Joi
         .string()
         .trim()
         .min(24)
