@@ -1,4 +1,4 @@
-const User = require('../dataBase/User');
+const {User, Cars} = require('../dataBase');
 const {passwordService} = require('../service');
 const {userUtil} = require('../util');
 
@@ -36,9 +36,9 @@ module.exports = {
 
     createUser: async (req, res, next) => {
         try {
-            const {password} = req.user;
+            const {password} = req.body;
             const hashedPassword = await passwordService.hash(password);
-            let newUser =await User.create({...req.user, password: hashedPassword});
+            let newUser = await User.create({...req.body, password: hashedPassword});
 
             newUser = userUtil.userNormalizator(newUser.toObject());
 
@@ -54,6 +54,18 @@ module.exports = {
             const user = await User.findByIdAndUpdate(user_id, req.body);
 
             res.json(user);
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    newCarToUser: async (req, res, next) => {
+        try {
+            const {user_id} = req.params;
+            const newCar = await Cars.create(req.body);
+            const userWithCar = await User.findByIdAndUpdate(user_id, { $push: {cars: newCar} });
+
+            res.json(userWithCar);
         } catch (e) {
             next(e);
         }

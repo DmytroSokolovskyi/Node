@@ -1,20 +1,21 @@
 const userAuthRouter = require('express').Router();
 
 const {userAuthController} = require('../controllers');
-const {userAuthMiddleware} = require('../middlewares');
+const {userAuthMiddleware, mainMiddleware} = require('../middlewares');
+const {userAuthValidator} = require('../validators');
+const {User} = require('../dataBase');
 
 userAuthRouter.post(
     '/login',
-    userAuthMiddleware.loginBodyValid,
+    mainMiddleware.validateBody(userAuthValidator.loginValidator),
     userAuthMiddleware.userAuth,
-    userAuthMiddleware.checkAuth,
     userAuthMiddleware.comparePassword,
     userAuthController.loginUser
 );
 userAuthRouter.post(
     '/logout',
-    userAuthMiddleware.logoutBodyValid,
-    userAuthMiddleware.userAuth,
+    mainMiddleware.validateBody(userAuthValidator.logoutValidator),
+    mainMiddleware.findAndCheckOne(User, 'email'),
     userAuthController.logoutUser);
 
 module.exports = userAuthRouter;

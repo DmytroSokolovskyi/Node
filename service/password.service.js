@@ -1,20 +1,17 @@
 const bcrypt = require('bcrypt');
 
 const {ErrorHandler} = require('../errors');
+const {errorsEnum} = require('../configs');
 
 module.exports = {
-    hash: async (password) => {
-        const passwordSalt = await bcrypt.hash(password, 10);
+    hash:(password) => bcrypt.hash(password, 10),
 
-        return passwordSalt;
-    },
     compare: async (password, hashPassword) => {
         const isPasswordMatched = await bcrypt.compare(password, hashPassword);
 
         if (!isPasswordMatched) {
-            throw new ErrorHandler('Wrong email or password', 404);
+            throw new ErrorHandler(errorsEnum.NOT_FOUND);
         }
 
-        return true;
-    }
+    },
 };
