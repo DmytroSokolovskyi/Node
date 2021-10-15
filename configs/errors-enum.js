@@ -1,5 +1,5 @@
 module.exports = {
-    OK: {message: 'You are logged in', status: 200},
+    OK: {message: 'You are logged in', code: 200},
 
     BAD_REQUEST: { message: 'Syntax error in request', code: 400},
     FORBIDDEN: { message: 'Access restrictions for the client', code: 403},
