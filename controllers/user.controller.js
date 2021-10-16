@@ -1,6 +1,7 @@
 const {User, Cars} = require('../dataBase');
 const {passwordService} = require('../service');
 const {userUtil} = require('../util');
+const {statusEnum} = require('../configs');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -26,9 +27,9 @@ module.exports = {
     deleteUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const delUser = await User.findByIdAndDelete(user_id);
+            await User.findByIdAndDelete(user_id);
 
-            res.json(delUser);
+            res.status(statusEnum.NO_CONTENT);
         } catch (e) {
             next(e);
         }
@@ -42,7 +43,7 @@ module.exports = {
 
             newUser = userUtil.userNormalizator(newUser.toObject());
 
-            res.json(newUser);
+            res.status(statusEnum.CREATED).json(newUser);
         } catch (e) {
             next(e);
         }
@@ -51,9 +52,9 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findByIdAndUpdate(user_id, req.body);
+            const user = await User.findByIdAndUpdate(user_id, req.body, {new: true});
 
-            res.json(user);
+            res.status(statusEnum.CREATED).json(user);
         } catch (e) {
             next(e);
         }
@@ -63,9 +64,9 @@ module.exports = {
         try {
             const {user_id} = req.params;
             const newCar = await Cars.create(req.body);
-            const userWithCar = await User.findByIdAndUpdate(user_id, { $push: {cars: newCar} });
+            const userWithCar = await User.findByIdAndUpdate(user_id, { $push: {cars: newCar} }, {new: true});
 
-            res.json(userWithCar);
+            res.status(statusEnum.CREATED).json(userWithCar);
         } catch (e) {
             next(e);
         }
