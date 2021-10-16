@@ -1,15 +1,18 @@
-const User = require('../dataBase/User');
 const {userUtil} = require('../util');
+const {jwtService} = require('../service');
+const {O_Auth, User} = require('../dataBase');
 
 module.exports = {
     loginUser: async (req, res, next) => {
         try {
-            const {email} = req.body;
-            let userNew = await User.findOneAndUpdate({email}, {auth: true}).lean();
+            const { user } = req;
+            const tokenPair = jwtService.generateTokenPair();
 
-            userNew = userUtil.userNormalizator(userNew);
+            userUtil.userNormalizator(user);
 
-            res.json(userNew);
+            await O_Auth.create({ ...tokenPair, user_id: user._id });
+
+            res.json({ user, ...tokenPair });
         } catch (e) {
             next(e);
         }
@@ -17,8 +20,8 @@ module.exports = {
 
     logoutUser: async (req, res, next) => {
         try {
-            const {email} = req.body;
-            let userNew = await User.findOneAndUpdate({email}, {auth: false}).lean();
+            const { email } = req.body;
+            let userNew = await User.findOneAndUpdate({ email }, {auth: false}).lean();
 
             userNew = userUtil.userNormalizator(userNew);
 

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const {userController} = require('../controllers');
-const {userMiddleware, mainMiddleware} = require('../middlewares');
+const {userMiddleware, mainMiddleware, userAuthMiddleware} = require('../middlewares');
 const {userValidator, carValidator} = require('../validators');
 const {User} = require('../dataBase');
 
@@ -29,9 +29,9 @@ router.delete(
     userController.deleteUserById
 );
 router.put(
-    '/car/:user_id',
+    '/car',
     mainMiddleware.validateBody(carValidator.bodyCarValidator),
-    userMiddleware.checkUserIdMiddleware,
+    userAuthMiddleware.checkAccessToken,
     userController.newCarToUser
 );
 

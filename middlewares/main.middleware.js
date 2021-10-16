@@ -17,7 +17,11 @@ module.exports ={
 
     validateBody: (validator) => async (req, res, next) => {
         try {
+            console.log(req.body);
             const {error, value} = await validator.validate(req.body);
+
+            console.log(value);
+            console.log(error);
 
             if (error) {
                 return next({message: error.details[0].message, code: errorsEnum.BAD_REQUEST.code});

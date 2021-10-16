@@ -27,16 +27,6 @@ const createUserValidator = Joi.object({
         .required(),
 });
 
-const idUserValidator = Joi.object({
-    id: Joi
-        .string()
-        .trim()
-        .min(24)
-        .max(24)
-        .regex(constants.ID_REGEXP)
-        .required()
-});
-
 const nameEditValidator = Joi.object({
     name: Joi
         .string()
@@ -49,6 +39,5 @@ const nameEditValidator = Joi.object({
 
 module.exports = {
     createUserValidator,
-    idUserValidator,
     nameEditValidator
 };
