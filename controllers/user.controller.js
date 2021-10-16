@@ -61,9 +61,12 @@ module.exports = {
 
     newCarToUser: async (req, res, next) => {
         try {
-            const {user_id} = req.params;
+            const {user_id} = req.user;
             const newCar = await Cars.create(req.body);
-            const userWithCar = await User.findByIdAndUpdate(user_id, { $push: {cars: newCar} });
+            const userWithCar = await User.findByIdAndUpdate(user_id,
+                { $push: {cars: newCar}},
+                {new : true}
+            );
 
             res.json(userWithCar);
         } catch (e) {

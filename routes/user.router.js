@@ -28,7 +28,7 @@ router.delete(
     userMiddleware.checkUserIdMiddleware,
     userController.deleteUserById
 );
-router.put(
+router.post(
     '/car',
     mainMiddleware.validateBody(carValidator.bodyCarValidator),
     userAuthMiddleware.checkAccessToken,

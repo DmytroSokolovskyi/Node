@@ -16,6 +16,7 @@ const bodyCarValidator = Joi.object({
     price: Joi
         .string()
         .required()
+        .trim()
 });
 
 module.exports ={

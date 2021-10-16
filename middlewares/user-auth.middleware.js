@@ -38,22 +38,24 @@ module.exports = {
 
     checkAccessToken:async (req, res, next) => {
         try {
-            console.log("app");
             const token = req.get(constants.AUTHORIZATION);
 
             if (!token) {
                 return next(errorsEnum.UNAUTHORIZED);
             }
+            console.log('1');
 
             await jwtService.verifyToken(token);
+            console.log('app');
 
-            const userbyAuth = await O_Auth.findOne({ access_token: token }).populate('user_id');
+            const response = await O_Auth.findOne({ access_token: token }).populate('user_id');
 
-            if (!userbyAuth) {
+            if (!response) {
                 return next(errorsEnum.UNAUTHORIZED);
             }
+            console.log(response);
+            req.user = response.user_id;
 
-            console.log(userbyAuth);
             next();
         } catch (e) {
             next(e);
