@@ -37,7 +37,26 @@ const nameEditValidator = Joi.object({
         .required(),
 });
 
+const userEditValidator = Joi.object({
+    name: Joi
+        .string()
+        .alphanum()
+        .min(2)
+        .max(30)
+        .trim()
+        .required(),
+    email: Joi
+        .string()
+        .regex(constants.EMAIL_REGEXP)
+        .lowercase()
+        .required(),
+    role: Joi
+        .string()
+        .allow(...Object.values(userRolesEnum)),
+});
+
 module.exports = {
     createUserValidator,
-    nameEditValidator
+    nameEditValidator,
+    userEditValidator
 };

@@ -5,5 +5,6 @@ module.exports = {
     errorsEnum: require('./errors-enum'),
     carsModelEnum: require('./car-model-enum'),
     tableNamesEnum: require('./table-names-enum'),
-    tokenTypeEnum: require('./token-type-enum')
+    tokenEnum: require('./token-enum'),
+    statusEnum: require('./status-enum')
 };

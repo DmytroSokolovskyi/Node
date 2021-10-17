@@ -3,7 +3,7 @@ const userAuthRouter = require('express').Router();
 const {userAuthController} = require('../controllers');
 const {userAuthMiddleware, mainMiddleware} = require('../middlewares');
 const {userAuthValidator} = require('../validators');
-const {User} = require('../dataBase');
+const {tokenEnum} = require('../configs');
 
 userAuthRouter.post(
     '/login',
@@ -12,10 +12,20 @@ userAuthRouter.post(
     userAuthMiddleware.comparePassword,
     userAuthController.loginUser
 );
-userAuthRouter.post(
+userAuthRouter.get(
     '/logout',
-    mainMiddleware.validateBody(userAuthValidator.logoutValidator),
-    mainMiddleware.findAndCheckOne(User, 'email'),
-    userAuthController.logoutUser);
+    userAuthMiddleware.checkToken(tokenEnum.ACCESS),
+    userAuthController.logoutUser
+);
+userAuthRouter.get(
+    '/logoutall',
+    userAuthMiddleware.checkToken(tokenEnum.ACCESS),
+    userAuthController.logoutAll
+);
+userAuthRouter.get(
+    '/refresh',
+    userAuthMiddleware.checkToken(tokenEnum.REFRESH),
+    userAuthController.changeRefresh
+);
 
 module.exports = userAuthRouter;

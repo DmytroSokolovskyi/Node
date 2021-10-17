@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const {errorsEnum, config, tokenTypeEnum} = require('../configs');
+const {errorsEnum, config, tokenEnum} = require('../configs');
 const {ErrorHandler} = require('../errors');
 
 module.exports = {
@@ -11,9 +11,9 @@ module.exports = {
         return { access_token, refresh_token };
     },
 
-    verifyToken: async (token, tokenType = tokenTypeEnum.ACCESS) => {
+    verifyToken: async (token, tokenType) => {
         try {
-            const secret = tokenType === tokenTypeEnum.ACCESS ? config.JWT_ACCESS_SECRET : config.JWT_REFRESH_SECRET;
+            const secret = tokenType === tokenEnum.ACCESS ? config.JWT_ACCESS_SECRET : config.JWT_REFRESH_SECRET;
 
             await jwt.verify(token, secret);
 

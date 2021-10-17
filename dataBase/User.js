@@ -20,10 +20,6 @@ const userSchema = new Schema({
         trim: true,
         select: false
     },
-    auth: {
-        type: Boolean,
-        default: false
-    },
     cars: [{
         type: Schema.Types.ObjectId,
         ref: tableNamesEnum.CARS

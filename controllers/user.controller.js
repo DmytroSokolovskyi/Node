@@ -1,6 +1,7 @@
 const {User, Cars} = require('../dataBase');
 const {passwordService} = require('../service');
 const {userUtil} = require('../util');
+const {errorsEnum, statusEnum} = require('../configs');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -23,12 +24,23 @@ module.exports = {
         }
     },
 
+    deleteUser: async (req, res, next) => {
+        try {
+            const {_id} = req.user;
+            await User.findByIdAndDelete(_id);
+
+            res.sendStatus(statusEnum.NO_CONTENT);
+        } catch (e) {
+            next(e);
+        }
+    },
+
     deleteUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const delUser = await User.findByIdAndDelete(user_id);
+            await User.findByIdAndDelete(user_id);
 
-            res.json(delUser);
+            res.sendStatus(statusEnum.NO_CONTENT);
         } catch (e) {
             next(e);
         }
@@ -42,7 +54,18 @@ module.exports = {
 
             newUser = userUtil.userNormalizator(newUser.toObject());
 
-            res.json(newUser);
+            res.status(errorsEnum.CREATED.status).json(newUser);
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    updateUser: async (req, res, next) => {
+        try {
+            const {_id} = req.user;
+            const user = await User.findByIdAndUpdate(_id, req.body, {new: true});
+
+            res.status(errorsEnum.CREATED.status).json(user);
         } catch (e) {
             next(e);
         }
@@ -51,9 +74,9 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
-            const user = await User.findByIdAndUpdate(user_id, req.body);
+            const user = await User.findByIdAndUpdate(user_id, req.body, {new: true});
 
-            res.json(user);
+            res.status(errorsEnum.CREATED.status).json(user);
         } catch (e) {
             next(e);
         }
@@ -61,14 +84,11 @@ module.exports = {
 
     newCarToUser: async (req, res, next) => {
         try {
-            const {user_id} = req.user;
+            const {_id} = req.user;
             const newCar = await Cars.create(req.body);
-            const userWithCar = await User.findByIdAndUpdate(user_id,
-                { $push: {cars: newCar}},
-                {new : true}
-            );
+            const userWithCar = await User.findByIdAndUpdate(_id, { $push: {cars: newCar} }, {new: true});
 
-            res.json(userWithCar);
+            res.status(errorsEnum.CREATED.status).json(userWithCar);
         } catch (e) {
             next(e);
         }

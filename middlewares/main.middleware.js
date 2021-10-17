@@ -1,4 +1,4 @@
-const {errorsEnum} = require('../configs');
+const {errorsEnum, statusEnum} = require('../configs');
 
 module.exports ={
     checkOne: (tableName, key) => async (req, res, next) => {
@@ -20,7 +20,7 @@ module.exports ={
             const {error, value} = await validator.validate(req.body);
 
             if (error) {
-                return next({message: error.details[0].message, code: errorsEnum.BAD_REQUEST.code});
+                return next({message: error.details[0].message, code: statusEnum.BAD_REQUEST});
             }
 
             req.body = value;
@@ -31,7 +31,6 @@ module.exports ={
         }
     },
 
-    //це вже перебор напевно з if
     findAndCheckOne: (tableName, key, checkToExist) => async (req, res, next) => {
         try {
             const oneItem = await tableName.findOne({ [key]: req.body[key] });
@@ -44,8 +43,20 @@ module.exports ={
                 return next(errorsEnum.CONFLICT);
             }
 
-            if (oneItem && !checkToExist) {
-                req.one = oneItem;
+            req.one = oneItem;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkRole: (roles = []) => (req, res, next) => {
+        try {
+            const { role } = req.user;
+
+            if (!roles.includes(role)) {
+                return next(errorsEnum.FORBIDDEN);
             }
 
             next();

@@ -24,7 +24,7 @@ module.exports = {
         }
     },
 
-    comparePassword:async (req, res, next) => {
+    comparePassword: async (req, res, next) => {
         try {
             const {password} = req.body;
             const user = req.user;
@@ -36,25 +36,24 @@ module.exports = {
         }
     },
 
-    checkAccessToken:async (req, res, next) => {
+    checkToken: (tokenType) => async (req, res, next) => {
         try {
             const token = req.get(constants.AUTHORIZATION);
 
             if (!token) {
                 return next(errorsEnum.UNAUTHORIZED);
             }
-            console.log('1');
 
-            await jwtService.verifyToken(token);
-            console.log('app');
+            await jwtService.verifyToken(token, tokenType);
 
-            const response = await O_Auth.findOne({ access_token: token }).populate('user_id');
+            const response = await O_Auth.findOne({ [tokenType]: token }).populate('user_id');
 
             if (!response) {
                 return next(errorsEnum.UNAUTHORIZED);
             }
-            console.log(response);
+
             req.user = response.user_id;
+            req.token = token;
 
             next();
         } catch (e) {

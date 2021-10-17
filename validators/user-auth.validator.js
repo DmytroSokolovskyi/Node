@@ -17,14 +17,6 @@ const loginValidator = Joi.object({
         .required()
 });
 
-const logoutValidator = Joi.object({
-    email: Joi
-        .string()
-        .regex(constants.EMAIL_REGEXP)
-        .lowercase()
-        .required()
-});
 module.exports = {
-    loginValidator,
-    logoutValidator
+    loginValidator
 };

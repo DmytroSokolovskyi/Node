@@ -12,7 +12,7 @@ module.exports = {
                 return next(errorsEnum.BAD_REQUEST);
             }
 
-            const user = await User.findById(value.id).lean();
+            const user = await User.findById(user_id).lean();
 
             if (!user) {
                 return next(errorsEnum.NOT_FOUND);

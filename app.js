@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const {config} = require('./configs');
+const {config, statusEnum} = require('./configs');
 const {userRouter, userAuthRouter} = require('./routes');
 
 const app = express();
@@ -16,7 +16,7 @@ app.use('/auth', userAuthRouter);
 // eslint-disable-next-line no-unused-vars
 app.use('*', (err, req, res, next) => {
     res
-        .status(err.status || 500)
+        .status(err.status || statusEnum.SERVER_ERROR)
         .json({
             msg: err.message
         });
