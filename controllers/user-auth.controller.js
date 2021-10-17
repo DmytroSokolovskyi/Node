@@ -21,9 +21,9 @@ module.exports = {
 
     logoutUser: async (req, res, next) => {
         try {
-            const { _id } = req.user;
+            const { token } = req;
 
-            await O_Auth.remove({user_id: _id});
+            await O_Auth.remove({[tokenEnum.ACCESS]: token});
 
             res.sendStatus(statusEnum.NO_CONTENT);
         } catch (e) {
