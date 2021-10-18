@@ -34,10 +34,6 @@ const userEditValidator = Joi.object({
         .min(2)
         .max(30)
         .trim(),
-    email: Joi
-        .string()
-        .regex(constants.EMAIL_REGEXP)
-        .lowercase(),
     role: Joi
         .string()
         .allow(...Object.values(userRolesEnum)),

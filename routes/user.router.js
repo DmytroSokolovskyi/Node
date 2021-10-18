@@ -17,7 +17,6 @@ router.put(
     '/:user_id',
     mainMiddleware.validateBody(userValidator.userEditValidator),
     userMiddleware.checkUserIdMiddleware,
-    mainMiddleware.checkOne(User, 'email'),
     userAuthMiddleware.checkToken(tokenEnum.ACCESS),
     mainMiddleware.checkRole(userRolesEnum.ADMIN, userRolesEnum.MANAGER),
     userController.updateUserById
