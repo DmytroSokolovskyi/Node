@@ -24,17 +24,6 @@ module.exports = {
         }
     },
 
-    deleteUser: async (req, res, next) => {
-        try {
-            const {_id} = req.user;
-            await User.findByIdAndDelete(_id);
-
-            res.sendStatus(statusEnum.NO_CONTENT);
-        } catch (e) {
-            next(e);
-        }
-    },
-
     deleteUserById: async (req, res, next) => {
         try {
             const {user_id} = req.params;
@@ -55,17 +44,6 @@ module.exports = {
             newUser = userUtil.userNormalizator(newUser.toObject());
 
             res.status(errorsEnum.CREATED.status).json(newUser);
-        } catch (e) {
-            next(e);
-        }
-    },
-
-    updateUser: async (req, res, next) => {
-        try {
-            const {_id} = req.user;
-            const user = await User.findByIdAndUpdate(_id, req.body, {new: true});
-
-            res.status(errorsEnum.CREATED.status).json(user);
         } catch (e) {
             next(e);
         }
