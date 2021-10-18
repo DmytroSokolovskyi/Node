@@ -13,21 +13,11 @@ router.post(
     mainMiddleware.checkOne(User, 'email'),
     userController.createUser
 );
-router.delete(
-    '/',
-    userAuthMiddleware.checkToken(tokenEnum.ACCESS),
-    userController.deleteUser
-);
-router.put(
-    '/',
-    mainMiddleware.validateBody(userValidator.nameEditValidator),
-    userAuthMiddleware.checkToken(tokenEnum.ACCESS),
-    userController.updateUser
-);
 router.put(
     '/:user_id',
     mainMiddleware.validateBody(userValidator.userEditValidator),
     userMiddleware.checkUserIdMiddleware,
+    mainMiddleware.checkOne(User, 'email'),
     userAuthMiddleware.checkToken(tokenEnum.ACCESS),
     mainMiddleware.checkRole(userRolesEnum.ADMIN, userRolesEnum.MANAGER),
     userController.updateUserById
@@ -41,7 +31,7 @@ router.delete(
     '/:user_id',
     userMiddleware.checkUserIdMiddleware,
     userAuthMiddleware.checkToken(tokenEnum.ACCESS),
-    mainMiddleware.checkRole(userRolesEnum.ADMIN),
+    mainMiddleware.checkRole(userRolesEnum.ADMIN, userRolesEnum.USER),
     userController.deleteUserById
 );
 router.post(

@@ -27,29 +27,17 @@ const createUserValidator = Joi.object({
         .required(),
 });
 
-const nameEditValidator = Joi.object({
-    name: Joi
-        .string()
-        .alphanum()
-        .min(2)
-        .max(30)
-        .trim()
-        .required(),
-});
-
 const userEditValidator = Joi.object({
     name: Joi
         .string()
         .alphanum()
         .min(2)
         .max(30)
-        .trim()
-        .required(),
+        .trim(),
     email: Joi
         .string()
         .regex(constants.EMAIL_REGEXP)
-        .lowercase()
-        .required(),
+        .lowercase(),
     role: Joi
         .string()
         .allow(...Object.values(userRolesEnum)),
@@ -57,6 +45,5 @@ const userEditValidator = Joi.object({
 
 module.exports = {
     createUserValidator,
-    nameEditValidator,
     userEditValidator
 };
