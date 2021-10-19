@@ -18,7 +18,7 @@ module.exports = {
                 return next(errorsEnum.NOT_FOUND);
             }
 
-            req.user = user;
+            req.userById = user;
 
             next();
         } catch (e) {

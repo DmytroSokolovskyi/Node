@@ -33,8 +33,9 @@ router.delete(
     mainMiddleware.checkRole(userRolesEnum.ADMIN, userRolesEnum.USER),
     userController.deleteUserById
 );
-router.post(
-    '/car',
+router.put(
+    '/car/:user_id',
+    userMiddleware.checkUserIdMiddleware,
     mainMiddleware.validateBody(carValidator.bodyCarValidator),
     userAuthMiddleware.checkToken(tokenEnum.ACCESS),
     userController.newCarToUser

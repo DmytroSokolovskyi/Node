@@ -1,10 +1,11 @@
 module.exports = {
+    carsModelEnum: require('./car-model-enum'),
     config: require('./config'),
     constants: require('./constants'),
-    userRolesEnum: require('./user-roles-enum'),
+    emailActionEnum: require('./email-action-enum'),
     errorsEnum: require('./errors-enum'),
-    carsModelEnum: require('./car-model-enum'),
+    statusEnum: require('./status-enum'),
     tableNamesEnum: require('./table-names-enum'),
     tokenEnum: require('./token-enum'),
-    statusEnum: require('./status-enum')
+    userRolesEnum: require('./user-roles-enum')
 };
