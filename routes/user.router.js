@@ -3,7 +3,7 @@ const router = require('express').Router();
 const {userController} = require('../controllers');
 const {userMiddleware, mainMiddleware, userAuthMiddleware} = require('../middlewares');
 const {userValidator, carValidator} = require('../validators');
-const {User} = require('../dataBase');
+const {User, O_Auth} = require('../dataBase');
 const {userRolesEnum, tokenEnum} = require('../configs');
 
 router.get('/', userController.getUsers);
@@ -17,8 +17,11 @@ router.put(
     '/:user_id',
     mainMiddleware.validateBody(userValidator.userEditValidator),
     userMiddleware.checkUserIdMiddleware,
-    userAuthMiddleware.checkToken(tokenEnum.ACCESS),
-    mainMiddleware.checkRole(userRolesEnum.ADMIN, userRolesEnum.MANAGER),
+    userAuthMiddleware.checkToken(O_Auth, tokenEnum.ACCESS),
+    mainMiddleware.checkRole([
+        userRolesEnum.ADMIN,
+        userRolesEnum.MANAGER
+    ]),
     userController.updateUserById
 );
 router.get(
@@ -29,15 +32,18 @@ router.get(
 router.delete(
     '/:user_id',
     userMiddleware.checkUserIdMiddleware,
-    userAuthMiddleware.checkToken(tokenEnum.ACCESS),
-    mainMiddleware.checkRole(userRolesEnum.ADMIN, userRolesEnum.USER),
+    userAuthMiddleware.checkToken(O_Auth, tokenEnum.ACCESS),
+    mainMiddleware.checkRole([
+        userRolesEnum.ADMIN,
+        userRolesEnum.USER
+    ]),
     userController.deleteUserById
 );
 router.put(
     '/car/:user_id',
-    userMiddleware.checkUserIdMiddleware,
     mainMiddleware.validateBody(carValidator.bodyCarValidator),
-    userAuthMiddleware.checkToken(tokenEnum.ACCESS),
+    userMiddleware.checkUserIdMiddleware,
+    userAuthMiddleware.checkToken(O_Auth, tokenEnum.ACCESS),
     userController.newCarToUser
 );
 

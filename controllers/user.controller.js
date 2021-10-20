@@ -1,4 +1,4 @@
-const {User, Cars} = require('../dataBase');
+const {User, Cars, O_Auth} = require('../dataBase');
 const {passwordService, emailService} = require('../service');
 const {userUtil} = require('../util');
 const {errorsEnum, statusEnum} = require('../configs');
@@ -29,7 +29,8 @@ module.exports = {
         try {
             const {user_id} = req.params;
             const {email, name} = req.userById;
-            await User.findByIdAndDelete(user_id);
+            await User.deleteOne({user_id});
+            await O_Auth.deleteMany({user_id});
 
             await emailService.sendMail(email, emailActionEnum.GOODBYE, {userName: name});
 
