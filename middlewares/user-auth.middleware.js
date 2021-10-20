@@ -1,7 +1,6 @@
 const User = require('../dataBase/User');
 const {passwordService, jwtService} = require('../service');
 const {errorsEnum, constants} = require('../configs');
-const {O_Auth} = require('../dataBase');
 
 module.exports = {
     userAuth: async (req, res, next) => {
@@ -36,7 +35,7 @@ module.exports = {
         }
     },
 
-    checkToken: (tokenType) => async (req, res, next) => {
+    checkToken: (tableName ,tokenType) => async (req, res, next) => {
         try {
             const token = req.get(constants.AUTHORIZATION);
 
@@ -46,8 +45,7 @@ module.exports = {
 
             await jwtService.verifyToken(token, tokenType);
 
-            const response = await O_Auth.findOne({ [tokenType]: token }).populate('user_id');
-
+            const response = await tableName.findOne({ [tokenType]: token }).populate('user_id');
             if (!response) {
                 return next(errorsEnum.UNAUTHORIZED);
             }

@@ -11,10 +11,22 @@ module.exports = {
         return { access_token, refresh_token };
     },
 
+    generateActionToken: (payload) => jwt.sign({payload}, config.JWT_ACTION_SECRET, { expiresIn: '24h' }),
+
     verifyToken: async (token, tokenType) => {
         try {
-            const secret = tokenType === tokenEnum.ACCESS ? config.JWT_ACCESS_SECRET : config.JWT_REFRESH_SECRET;
-
+            let secret = '';
+            switch (tokenType) {
+                case tokenEnum.ACCESS:
+                    secret = config.JWT_ACCESS_SECRET;
+                    break;
+                case tokenEnum.REFRESH:
+                    secret = config.JWT_REFRESH_SECRET;
+                    break;
+                case tokenEnum.ACTION:
+                    secret = config.JWT_ACTION_SECRET;
+                    break;
+            }
             await jwt.verify(token, secret);
 
         } catch (e) {

@@ -16,5 +16,13 @@ module.exports = {
     [emailActionEnum.UPDATE]: {
         templateName: emailActionEnum.UPDATE,
         subject: 'Good news'
+    },
+    [emailActionEnum.FORGOT_PASS]: {
+        templateName: emailActionEnum.FORGOT_PASS,
+        subject: 'Be careful'
+    },
+    [emailActionEnum.CHANGE_PASS]: {
+        templateName: emailActionEnum.CHANGE_PASS,
+        subject: 'Attention'
     }
 };

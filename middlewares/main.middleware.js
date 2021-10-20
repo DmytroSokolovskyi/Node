@@ -31,6 +31,28 @@ module.exports ={
         }
     },
 
+    findAndCheckOne: (tableName, key, checkToExist) => async (req, res, next) => {
+        try {
+            const oneItem = await tableName.findOne({ [key]: req.body[key] });
+
+            if (!oneItem && !checkToExist) {
+                return next(errorsEnum.NOT_FOUND);
+            }
+
+            if (oneItem && checkToExist) {
+                return next(errorsEnum.CONFLICT);
+            }
+
+            if (oneItem && !checkToExist) {
+                req.one = oneItem;
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
     checkRole: (roles = []) => (req, res, next) => {
         try {
             const { role } = req.user;
