@@ -11,7 +11,8 @@ const actionTokenSchema = new Schema({
     type: {
         type: String,
         required: true,
-        enum: Object.values(tokenEnum)
+        enum: Object.values(tokenEnum),
+        default: tokenEnum.ACTION
     },
     user_id: {
         type: Schema.Types.ObjectId,
