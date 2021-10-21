@@ -1,6 +1,8 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const {userRolesEnum, tableNamesEnum} = require('../configs');
+const { userRolesEnum, tableNamesEnum } = require('../configs');
+const { passwordService } = require('../service');
+const { UserNormalize } = require('../util/user.util');
 
 const userSchema = new Schema({
     name: {
@@ -28,7 +30,29 @@ const userSchema = new Schema({
         type: String,
         default: userRolesEnum.USER,
         enum: Object.values(userRolesEnum)
+    },
+    activate: {
+        type: Boolean,
+        default: false,
     }
-}, {timestamps: true});
+}, { timestamps: true, toObject: { virtuals: true}, toJSON: { virtuals: true } });
+
+userSchema.methods = {
+    comparePassword(password) {
+        return passwordService.compare(password, this.password);
+    },
+
+    normalize() {
+        return new UserNormalize(this);
+    }
+};
+
+userSchema.statics = {
+    async createUserWithPassword(user) {
+        const hashedPassword = await passwordService.hash(user.password);
+
+        return this.create({ ...user, password: hashedPassword });
+    }
+};
 
 module.exports = model(tableNamesEnum.USER, userSchema);

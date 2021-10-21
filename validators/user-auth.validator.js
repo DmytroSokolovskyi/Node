@@ -35,8 +35,26 @@ const passwordValidator = Joi.object({
         .required()
 });
 
+const changePasswordValidator = Joi.object({
+    oldPassword: Joi
+        .string()
+        .regex(constants.PASSWORD_REGEXP)
+        .min(8)
+        .max(128)
+        .trim()
+        .required(),
+    newPassword: Joi
+        .string()
+        .regex(constants.PASSWORD_REGEXP)
+        .min(8)
+        .max(128)
+        .trim()
+        .required()
+});
+
 module.exports = {
     loginValidator,
     emailValidator,
-    passwordValidator
+    passwordValidator,
+    changePasswordValidator
 };

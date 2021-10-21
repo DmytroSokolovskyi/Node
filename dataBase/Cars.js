@@ -18,6 +18,6 @@ const carsSchema = new Schema({
         required: true,
         trim: true,
     }
-}, {timestamps: true});
+}, { timestamps: true, toObject: { virtuals: true}, toJSON: { virtuals: true } });
 
 module.exports = model(tableNamesEnum.CARS, carsSchema);

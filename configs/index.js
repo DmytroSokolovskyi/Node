@@ -1,4 +1,5 @@
 module.exports = {
+    actionTokenTypeEnum: require('./action-token-type-enum'),
     carsModelEnum: require('./car-model-enum'),
     config: require('./config'),
     constants: require('./constants'),

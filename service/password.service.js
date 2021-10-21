@@ -12,6 +12,5 @@ module.exports = {
         if (!isPasswordMatched) {
             throw new ErrorHandler(errorsEnum.NOT_FOUND);
         }
-
     },
 };

@@ -1,6 +1,7 @@
 extends  container
 block content
     h4 Hi, #{userName}
-    p Your registration was successful you can go to your personal account
+    p Your registration was successful!
+    p To activate your account, follow the link
     p
-             a(href='http://localhost:3000/') Let's GO
+        a(href=`${URL}`) Let's GO

@@ -1,10 +1,10 @@
 const router = require('express').Router();
 
-const {userController} = require('../controllers');
-const {userMiddleware, mainMiddleware, userAuthMiddleware} = require('../middlewares');
-const {userValidator, carValidator} = require('../validators');
-const {User, O_Auth} = require('../dataBase');
-const {userRolesEnum, tokenEnum} = require('../configs');
+const { userController } = require('../controllers');
+const { userMiddleware, mainMiddleware, userAuthMiddleware } = require('../middlewares');
+const { userValidator, carValidator } = require('../validators');
+const { User, O_Auth } = require('../dataBase');
+const { userRolesEnum, tokenEnum } = require('../configs');
 
 router.get('/', userController.getUsers);
 router.post(

@@ -1,15 +1,14 @@
 const User = require('../dataBase/User');
-const {passwordService, jwtService} = require('../service');
-const {errorsEnum, constants} = require('../configs');
+const { jwtService } = require('../service');
+const { errorsEnum, constants, actionTokenTypeEnum} = require('../configs');
 
 module.exports = {
     userAuth: async (req, res, next) => {
         try {
-            const {email} = req.body;
+            const { email } = req.body;
             const user = await User
                 .findOne({ email })
-                .select('+password')
-                .lean();
+                .select('+password');
 
             if (!user) {
                 return next(errorsEnum.NOT_FOUND);
@@ -23,21 +22,13 @@ module.exports = {
         }
     },
 
-    comparePassword: async (req, res, next) => {
-        try {
-            const {password} = req.body;
-            const user = req.user;
-            await passwordService.compare(password, user.password);
-
-            next();
-        } catch (e) {
-            next(e);
-        }
-    },
-
     checkToken: (tableName ,tokenType) => async (req, res, next) => {
         try {
-            const token = req.get(constants.AUTHORIZATION);
+            let token = req.get(constants.AUTHORIZATION);
+
+            if (tokenType === actionTokenTypeEnum.ACTIVATE_ACCOUNT) {
+                token = req.params.token;
+            }
 
             if (!token) {
                 return next(errorsEnum.UNAUTHORIZED);
@@ -45,7 +36,8 @@ module.exports = {
 
             await jwtService.verifyToken(token, tokenType);
 
-            const response = await tableName.findOne({ [tokenType]: token }).populate('user_id');
+            const response = await tableName.findOne({ [tokenType]: token });
+
             if (!response) {
                 return next(errorsEnum.UNAUTHORIZED);
             }
