@@ -7,16 +7,14 @@ const userNormalizator = (userToNormalize = {}) => {
 
     return userToNormalize;
 };
-
 class UserNormalize {
-    constructor({_id, name, email, role, cars, activate}) {
+    constructor({ _id, name, email, role, cars, activate }) {
         this._id = _id;
         this.name = name;
         this.email = email;
         this.role = role;
         this.cars = cars;
         this.activate = activate;
-
     }
 }
 

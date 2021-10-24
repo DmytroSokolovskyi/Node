@@ -8,6 +8,7 @@ module.exports = {
     FORBIDDEN: { message: 'Access restrictions for the client', status: 403},
     NOT_FOUND: {message: 'No user with this data', status: 404},
     TEMPLATE_UNDEFINED: {message: 'Template name undefined', status:404},
+    CORS_ERROR: {message: 'CORS is not allowed', status:405},
     CONFLICT: { message: 'User with such data is already present', status: 409},
 
     SERVER_ERROR: { message: 'Internal server error', status: 500},
