@@ -1,12 +1,12 @@
 const { User, Cars, O_Auth, ActionToken} = require('../dataBase');
-const { emailService, jwtService } = require('../service');
+const { emailService, jwtService, userService} = require('../service');
 const { errorsEnum, statusEnum, actionTokenTypeEnum, config } = require('../configs');
 const { emailActionEnum } = require('../configs');
 
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await User.find();
+            const users = await userService.getAllusers(req.query);
 
             res.json(users);
         } catch (e) {

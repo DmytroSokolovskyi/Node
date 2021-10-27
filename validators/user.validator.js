@@ -15,6 +15,10 @@ const createUserValidator = Joi.object({
         .regex(constants.EMAIL_REGEXP)
         .lowercase()
         .required(),
+    age: Joi
+        .number()
+        .min(16)
+        .max(100),
     role: Joi
         .string()
         .allow(...Object.values(userRolesEnum)),

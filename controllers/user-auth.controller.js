@@ -124,9 +124,9 @@ module.exports = {
 
             await ActionToken.deleteOne({action_token: token});
 
-            const userActiv = await User.findByIdAndUpdate(user._id, {activate: true}, {new: true});
+            await User.findByIdAndUpdate(user._id, {activate: true}, {new: true});
 
-            res.json(userActiv);
+            res.json(statusEnum.NO_CONTENT);
         } catch (e) {
             next(e);
         }

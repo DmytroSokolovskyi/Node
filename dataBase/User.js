@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 
 const { userRolesEnum, tableNamesEnum } = require('../configs');
-const { passwordService } = require('../service');
+const passwordService = require('../service/password.service');
 const { UserNormalize } = require('../util/user.util');
 
 const userSchema = new Schema({
@@ -21,6 +21,11 @@ const userSchema = new Schema({
         required: true,
         trim: true,
         select: false
+    },
+    age: {
+        type: Number,
+        min: 16,
+        max: 100
     },
     cars: [{
         type: Schema.Types.ObjectId,
