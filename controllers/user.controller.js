@@ -1,5 +1,5 @@
 const { User, Cars, O_Auth, ActionToken} = require('../dataBase');
-const { emailService, jwtService, userService} = require('../service');
+const { emailService, jwtService, userService, s3Service} = require('../service');
 const { errorsEnum, statusEnum, actionTokenTypeEnum, config } = require('../configs');
 const { emailActionEnum } = require('../configs');
 
@@ -71,6 +71,21 @@ module.exports = {
             const user = await User.findByIdAndUpdate(user_id, req.body, { new: true });
 
             await emailService.sendMail(user.email, emailActionEnum.UPDATE, { userName: user.name });
+
+            res.status(errorsEnum.CREATED.status).json(user);
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    updateFileToUser: async (req, res, next) => {
+        try {
+            const { user_id } = req.params;
+            const { avatar } = req.files;
+
+            const uploadInfo = await s3Service.uploadImage(avatar, 'users', user_id);
+
+            const user = await User.findByIdAndUpdate(user_id, {avatar: uploadInfo.Location}, { new: true });
 
             res.status(errorsEnum.CREATED.status).json(user);
         } catch (e) {

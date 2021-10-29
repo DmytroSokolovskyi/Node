@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const swaggerUI = require('swagger-ui-express');
@@ -30,6 +31,7 @@ if (config.NODE_ENV === 'dev') {
     app.use(morgan('dev'));
 }
 
+app.use(fileUpload({}));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 

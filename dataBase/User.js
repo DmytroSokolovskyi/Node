@@ -39,6 +39,9 @@ const userSchema = new Schema({
     activate: {
         type: Boolean,
         default: false,
+    },
+    avatar: {
+        type: String
     }
 }, { timestamps: true, toObject: { virtuals: true}, toJSON: { virtuals: true } });
 

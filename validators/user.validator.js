@@ -41,6 +41,9 @@ const userEditValidator = Joi.object({
     role: Joi
         .string()
         .allow(...Object.values(userRolesEnum)),
+    avatar: Joi
+        .string()
+        .trim()
 });
 
 module.exports = {

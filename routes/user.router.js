@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const { userController } = require('../controllers');
-const { userMiddleware, mainMiddleware, userAuthMiddleware } = require('../middlewares');
+const { userMiddleware, mainMiddleware, userAuthMiddleware, fileMiddleware} = require('../middlewares');
 const { userValidator, carValidator, queryValidator} = require('../validators');
 const { User, O_Auth } = require('../dataBase');
 const { userRolesEnum, tokenEnum } = require('../configs');
@@ -39,6 +39,13 @@ router.route('/:user_id')
         ]),
         userController.deleteUserById
     );
+router.put(
+    '/file/:user_id',
+    fileMiddleware.checkUserAvatar,
+    userMiddleware.checkUserIdMiddleware,
+    userAuthMiddleware.checkToken(O_Auth, tokenEnum.ACCESS),
+    userController.updateFileToUser
+);
 router.put(
     '/car/:user_id',
     mainMiddleware.validateBody(carValidator.bodyCarValidator),
