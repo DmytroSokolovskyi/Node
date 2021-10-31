@@ -5,4 +5,5 @@ module.exports = {
     UPDATE: 'update',
     FORGOT_PASS: 'forgot-pass',
     CHANGE_PASS: 'change-pass',
+    INACTIVE: 'inactive'
 };

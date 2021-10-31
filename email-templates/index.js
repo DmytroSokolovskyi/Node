@@ -24,5 +24,9 @@ module.exports = {
     [emailActionEnum.CHANGE_PASS]: {
         templateName: emailActionEnum.CHANGE_PASS,
         subject: 'Attention'
+    },
+    [emailActionEnum.INACTIVE]: {
+        templateName: emailActionEnum.INACTIVE,
+        subject: 'be careful'
     }
 };
